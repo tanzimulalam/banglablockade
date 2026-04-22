@@ -60,7 +60,6 @@ export default function ArticlePage({ params }: { params: { lang: string; slug: 
           className="object-cover"
           priority
           sizes="100vw"
-          unoptimized
         />
       </div>
 

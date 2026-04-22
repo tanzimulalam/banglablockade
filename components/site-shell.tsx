@@ -22,18 +22,18 @@ export function SiteShell({
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/20 bg-[#026C33] text-white shadow-md">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
           <Link href={`/${lang}`} className="flex items-center gap-3">
             <Image
               src="/bangla-blockade-logo.png"
               alt="Bangla Blockade logo"
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover"
+              width={64}
+              height={64}
+              className="h-12 w-12 object-contain md:h-14 md:w-14"
               priority
             />
-            <span className={`text-xl font-bold md:text-2xl ${isBangla ? "font-bn" : "font-impact"}`}>
+            <span className={`text-xl font-bold text-[#026C33] md:text-2xl ${isBangla ? "font-bn" : "font-impact"}`}>
               বাংলা Blockade
             </span>
           </Link>
@@ -42,7 +42,7 @@ export function SiteShell({
               <Link
                 key={link.key}
                 href={link.href.startsWith("#") ? `/${lang}/${link.href}` : `/${lang}/${link.href}`}
-                className={`text-sm font-semibold transition hover:text-[#F31B1D] ${isBangla ? "font-bn" : ""}`}
+                className={`text-sm font-semibold text-slate-700 transition hover:text-[#F31B1D] ${isBangla ? "font-bn" : ""}`}
               >
                 {ui.nav[link.key][lang]}
               </Link>
@@ -51,28 +51,30 @@ export function SiteShell({
           <div className="flex items-center gap-2">
             <Link
               href={`/en`}
-              className={`min-h-11 min-w-11 rounded-md px-3 py-2 text-sm font-bold ${
-                lang === "en" ? "bg-[#F31B1D]" : "bg-white/10"
+              className={`min-h-11 min-w-11 rounded-md border px-3 py-2 text-sm font-bold ${
+                lang === "en" ? "border-[#F31B1D] bg-[#F31B1D] text-white" : "border-slate-300 bg-white text-slate-700"
               }`}
             >
               EN
             </Link>
             <Link
               href={`/bn`}
-              className={`min-h-11 min-w-11 rounded-md px-3 py-2 text-sm font-bold ${
-                lang === "bn" ? "bg-[#F31B1D]" : "bg-white/10"
+              className={`min-h-11 min-w-11 rounded-md border px-3 py-2 text-sm font-bold ${
+                lang === "bn" ? "border-[#F31B1D] bg-[#F31B1D] text-white" : "border-slate-300 bg-white text-slate-700"
               }`}
             >
               বাং
             </Link>
           </div>
         </div>
-        <nav className="mx-auto flex w-full max-w-6xl gap-3 overflow-x-auto px-4 pb-3 md:hidden">
+        <nav className="mx-auto flex w-full max-w-6xl gap-2 overflow-x-auto px-4 pb-3 md:hidden">
           {links.map((link) => (
             <Link
               key={link.key}
               href={link.href.startsWith("#") ? `/${lang}/${link.href}` : `/${lang}/${link.href}`}
-              className={`shrink-0 rounded-full bg-white/10 px-3 py-2 text-xs font-semibold ${lang === "bn" ? "font-bn" : ""}`}
+              className={`shrink-0 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 ${
+                lang === "bn" ? "font-bn" : ""
+              }`}
             >
               {ui.nav[link.key][lang]}
             </Link>
@@ -80,7 +82,7 @@ export function SiteShell({
         </nav>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="mt-16 bg-[#026C33] py-8 text-white">
+      <footer className="mt-16 border-t border-slate-200 bg-[#025329] py-10 text-white">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 md:flex-row md:items-center md:justify-between md:px-6">
           <p className={isBangla ? "font-bn" : ""}>
             © {new Date().getFullYear()} বাংলা Blockade.{" "}
