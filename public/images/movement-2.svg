@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#072010"/>
+  <rect x="130" y="130" width="1340" height="640" fill="none" stroke="#F31B1D" stroke-width="12"/>
+  <text x="220" y="470" fill="#ffffff" font-size="80" font-family="Arial, sans-serif" font-weight="700">Citizen Documentation</text>
+</svg>

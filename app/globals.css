@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7faf8;
+  --foreground: #112317;
+  --brand-red: #f31b1d;
+  --brand-green: #026c33;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-roboto);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-roboto), "Roboto", Arial, sans-serif;
+  line-height: 1.7;
+}
+
+.font-bn {
+  font-family: "Shadhinata", "Kalpurush", "Abusayed", "Noto Sans Bengali",
+    sans-serif;
+}
+
+.font-impact {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
