@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { categoryLabel, formatDate, getArticle, isLang, Lang, ui } from "@/lib/content";
+import { articles, categoryLabel, formatDate, getArticle, isLang, Lang, languages, ui } from "@/lib/content";
+
+export function generateStaticParams() {
+  return languages.flatMap((lang) => articles.map((article) => ({ lang, slug: article.slug })));
+}
 
 export async function generateMetadata({
   params,
