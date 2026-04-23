@@ -6,7 +6,7 @@ export default function PrivacyPage({ params }: { params: { lang: string } }) {
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className={`text-4xl text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+      <h1 className={`text-4xl text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
         {isBangla ? "গোপনীয়তা নীতি" : "Privacy Policy"}
       </h1>
       <p className={`mt-4 ${isBangla ? "font-bn" : ""}`}>

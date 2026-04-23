@@ -10,21 +10,21 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-roboto);
+  --font-sans: var(--font-noticia-text);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto), "Roboto", Arial, sans-serif;
+  font-family: var(--font-noticia-text), "Noticia Text", Georgia, serif;
   line-height: 1.7;
 }
 
 .font-bn {
-  font-family: "Shadhinata", "Kalpurush", "Abusayed", "Noto Sans Bengali",
-    sans-serif;
+  font-family: var(--font-tiro-bangla), "Tiro Bangla", "Noto Serif Bengali",
+    serif;
 }
 
-.font-impact {
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+.font-en-display {
+  font-family: var(--font-noticia-text), "Noticia Text", Georgia, serif;
 }

@@ -47,7 +47,7 @@ export default function ArticlePage({ params }: { params: { lang: string; slug: 
         <span className="rounded-full bg-[#026C33]/10 px-3 py-1 text-sm font-bold text-[#026C33]">
           {categoryLabel[article.category][lang]}
         </span>
-        <h1 className={`mt-4 text-4xl md:text-[44px] leading-tight ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+        <h1 className={`mt-4 text-4xl md:text-[44px] leading-tight ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
           {article.title[lang]}
         </h1>
         <div className={`mt-4 flex flex-wrap gap-4 text-base text-slate-600 ${isBangla ? "font-bn" : ""}`}>

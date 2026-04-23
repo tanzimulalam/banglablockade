@@ -20,7 +20,7 @@ export function ArticleCard({ article, lang }: { article: Article; lang: Lang })
         <span className="w-fit rounded-full bg-[#f31b1d]/10 px-3 py-1 text-xs font-bold text-[#c81012]">
           {categoryLabel[article.category][lang]}
         </span>
-        <h3 className={`text-2xl leading-tight text-slate-900 ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+        <h3 className={`text-2xl leading-tight text-slate-900 ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
           {article.title[lang]}
         </h3>
         <p className={`text-base text-slate-700 ${isBangla ? "font-bn" : ""}`}>{article.excerpt[lang]}</p>

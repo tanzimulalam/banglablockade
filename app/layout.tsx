@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Noticia_Text, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 
-const roboto = Roboto({
-  variable: "--font-roboto",
-  weight: ["400", "500", "700", "900"],
+const noticiaText = Noticia_Text({
+  variable: "--font-noticia-text",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
+const tiroBangla = Tiro_Bangla({
+  variable: "--font-tiro-bangla",
+  weight: ["400"],
+  subsets: ["bengali", "latin"],
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://banglablockade.com"),
+  metadataBase: new URL("https://tanzimulalam.github.io/banglablockade"),
   title: {
     default: "Bangla Blockade | বাংলা Blockade",
     template: "%s | Bangla Blockade",
@@ -39,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full antialiased`}>
+    <html lang="en" className={`${noticiaText.variable} ${tiroBangla.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

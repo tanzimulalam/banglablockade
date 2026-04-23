@@ -22,7 +22,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
 
   return (
     <section className="mx-auto w-full max-w-4xl px-4 py-10">
-      <h1 className={`text-4xl md:text-[44px] text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+      <h1 className={`text-4xl md:text-[44px] text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
         {isBangla ? "আমাদের মিশন" : "Our Mission"}
       </h1>
       <p className={`mt-5 text-base md:text-lg ${isBangla ? "font-bn" : ""}`}>
@@ -33,7 +33,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className={`text-2xl text-[#F31B1D] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+          <h2 className={`text-2xl text-[#F31B1D] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
             {isBangla ? "ভিশন" : "Vision"}
           </h2>
           <p className={`mt-3 ${isBangla ? "font-bn" : ""}`}>
@@ -43,7 +43,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
           </p>
         </div>
         <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className={`text-2xl text-[#F31B1D] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+          <h2 className={`text-2xl text-[#F31B1D] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
             {isBangla ? "ইতিহাস" : "History"}
           </h2>
           <p className={`mt-3 ${isBangla ? "font-bn" : ""}`}>
@@ -55,7 +55,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
       </div>
 
       <div className="mt-8 rounded-xl bg-[#026C33] p-6 text-white">
-        <h2 className={`text-2xl ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+        <h2 className={`text-2xl ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
           {isBangla ? "দল" : "Team"}
         </h2>
         <p className={`mt-3 ${isBangla ? "font-bn" : ""}`}>

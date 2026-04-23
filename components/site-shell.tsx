@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Lang, ui } from "@/lib/content";
+import logo from "@/public/bangla-blockade-logo.png";
 
 const links = [
   { key: "home", href: "" },
@@ -26,14 +27,14 @@ export function SiteShell({
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
           <Link href={`/${lang}`} className="flex items-center gap-3">
             <Image
-              src="/bangla-blockade-logo.png"
+              src={logo}
               alt="Bangla Blockade logo"
               width={64}
               height={64}
-              className="h-12 w-12 object-contain md:h-14 md:w-14"
+              className="h-12 w-12 shrink-0 object-contain md:h-14 md:w-14"
               priority
             />
-            <span className={`text-xl font-bold text-[#026C33] md:text-2xl ${isBangla ? "font-bn" : "font-impact"}`}>
+            <span className={`text-xl font-bold text-[#026C33] md:text-2xl ${isBangla ? "font-bn" : "font-en-display"}`}>
               বাংলা Blockade
             </span>
           </Link>

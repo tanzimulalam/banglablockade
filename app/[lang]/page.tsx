@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { ArticleCard } from "@/components/article-card";
 import { articles, isLang, Lang, ui } from "@/lib/content";
 
@@ -49,28 +50,28 @@ export default function HomePage({ params }: { params: { lang: string } }) {
               <Image src={featured.image} alt={featured.title[lang]} fill className="object-cover" sizes="100vw" />
             </div>
             <div className="p-5 md:p-6">
-              <h1 className={`text-4xl leading-tight md:text-[44px] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+              <h1 className={`text-4xl leading-tight md:text-[44px] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
                 {ui.heroTitle[lang]}
               </h1>
               <p className={`mt-3 text-base text-slate-700 md:text-lg ${isBangla ? "font-bn" : ""}`}>{ui.heroSubtitle[lang]}</p>
             </div>
           </article>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
-            <h2 className={`mb-3 text-2xl text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+            <h2 className={`mb-3 text-2xl text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
               {lang === "bn" ? "সাম্প্রতিক আপডেট" : "Latest Updates"}
             </h2>
             <div className="space-y-4">
               {topStories.map((story) => (
                 <article key={story.slug} className="border-b border-slate-200 pb-3 last:border-none last:pb-0">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#c81012]">{story.category}</p>
-                  <a
+                  <Link
                     href={`/${lang}/articles/${story.slug}`}
                     className={`mt-1 block text-base font-semibold leading-snug text-slate-800 hover:text-[#F31B1D] ${
                       isBangla ? "font-bn" : ""
                     }`}
                   >
                     {story.title[lang]}
-                  </a>
+                  </Link>
                 </article>
               ))}
             </div>
@@ -79,7 +80,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       </section>
 
       <section className="mt-12">
-        <h2 className={`mb-5 border-l-4 border-[#F31B1D] pl-3 text-3xl text-[#1a1f1b] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+        <h2 className={`mb-5 border-l-4 border-[#F31B1D] pl-3 text-3xl text-[#1a1f1b] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
           {lang === "bn" ? "সাম্প্রতিক প্রতিবেদন" : "Latest Reports"}
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -93,7 +94,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
         <section id={section.id} key={section.id} className="mt-14">
           <h2
             className={`mb-5 border-l-4 border-[#F31B1D] pl-3 text-3xl text-[#1a1f1b] ${
-              isBangla ? "font-bn font-bold" : "font-impact"
+              isBangla ? "font-bn font-bold" : "font-en-display font-bold"
             }`}
           >
             {section.category === "Digital Investigation" && (lang === "bn" ? "ডিজিটাল অনুসন্ধান" : "Digital Investigations")}

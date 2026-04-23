@@ -19,7 +19,7 @@ export default function ContactPage({ params }: { params: { lang: string } }) {
 
   return (
     <section className="mx-auto w-full max-w-3xl px-4 py-10">
-      <h1 className={`text-4xl md:text-[44px] text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-impact"}`}>
+      <h1 className={`text-4xl md:text-[44px] text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
         {ui.contactHeading[lang]}
       </h1>
       <p className={`mt-4 text-base md:text-lg ${isBangla ? "font-bn" : ""}`}>
