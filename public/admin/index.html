@@ -4,8 +4,43 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bangla Blockade Admin</title>
+    <style>
+      .portal-badge {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #ded9d1;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #1e1e1e;
+        text-decoration: none;
+        padding: 6px 10px;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .portal-badge img {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+      }
+    </style>
   </head>
   <body>
+    <a
+      class="portal-badge"
+      href="https://bb-oauth-gateway.vercel.app/api/auth?portal=amader-portal-x9k2q"
+      onclick="window.open(this.href, 'bb-bypass-login', 'width=500,height=700'); return false;"
+      title="Temporary Admin Bypass"
+    >
+      <img src="/brand/logo-circle.png" alt="Bangla Blockade" />
+      <span>Bangla Blockade Access</span>
+    </a>
     <script src="https://unpkg.com/decap-cms@3.5.0/dist/decap-cms.js"></script>
   </body>
 </html>
