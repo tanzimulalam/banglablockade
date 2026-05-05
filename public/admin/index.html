@@ -41,6 +41,26 @@
       <img src="/brand/logo-circle.png" alt="Bangla Blockade" />
       <span>Bangla Blockade Access</span>
     </a>
+    <script>
+      // Fallback auth bridge: if Decap misses the popup event, set its local auth state manually.
+      window.addEventListener("message", function (event) {
+        if (typeof event.data !== "string") return;
+        const prefix = "authorization:github:success:";
+        if (!event.data.startsWith(prefix)) return;
+
+        try {
+          const payload = JSON.parse(event.data.slice(prefix.length));
+          if (!payload || !payload.token) return;
+          localStorage.setItem(
+            "netlify-cms-user",
+            JSON.stringify({ token: payload.token, backendName: "github" })
+          );
+          window.location.reload();
+        } catch (error) {
+          console.error("Bypass auth bridge parse failed", error);
+        }
+      });
+    </script>
     <script src="https://unpkg.com/decap-cms@3.5.0/dist/decap-cms.js"></script>
   </body>
 </html>
