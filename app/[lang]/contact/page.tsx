@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { isLang, Lang, ui } from "@/lib/content";
+import { getEditablePage } from "@/lib/cms-content";
+import { isLang, Lang } from "@/lib/content";
 
 export async function generateMetadata({
   params,
@@ -7,25 +8,25 @@ export async function generateMetadata({
   params: { lang: string };
 }): Promise<Metadata> {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
+  const contactPage = getEditablePage("contact");
   return {
-    title: lang === "bn" ? "যোগাযোগ" : "Contact",
-    description: lang === "bn" ? "বাংলা Blockade-এর সাথে যোগাযোগ করুন।" : "Get in touch with Bangla Blockade.",
+    title: contactPage.title[lang],
+    description: contactPage.description[lang],
   };
 }
 
 export default function ContactPage({ params }: { params: { lang: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
   const isBangla = lang === "bn";
+  const contactPage = getEditablePage("contact");
 
   return (
     <section className="mx-auto w-full max-w-3xl px-4 py-10">
       <h1 className={`text-4xl md:text-[44px] text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
-        {ui.contactHeading[lang]}
+        {contactPage.title[lang]}
       </h1>
       <p className={`mt-4 text-base md:text-lg ${isBangla ? "font-bn" : ""}`}>
-        {isBangla
-          ? "টিপস, যাচাইয়ের অনুরোধ বা যেকোনো অনুসন্ধানের জন্য আমাদের লিখুন।"
-          : "Write to us for tips, verification requests, or partnership inquiries."}
+        {contactPage.description[lang]}
       </p>
 
       <form className="mt-8 space-y-4 rounded-xl bg-white p-6 shadow-sm">
@@ -56,6 +57,7 @@ export default function ContactPage({ params }: { params: { lang: string } }) {
       </form>
 
       <div className={`mt-6 text-sm text-slate-700 ${isBangla ? "font-bn" : ""}`}>
+        <p>{contactPage.body[lang]}</p>
         <p>info@banglablockade.com</p>
         <p>tips@banglablockade.com</p>
       </div>

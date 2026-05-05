@@ -1,3 +1,5 @@
+import { getCmsArticles } from "@/lib/cms-content";
+
 export const languages = ["en", "bn"] as const;
 export type Lang = (typeof languages)[number];
 
@@ -59,7 +61,7 @@ export const ui = {
   submitClaim: { en: "Submit a Claim", bn: "দাবি জমা দিন" },
 };
 
-export const articles: Article[] = [
+const fallbackArticles: Article[] = [
   {
     slug: "student-movement-gains-momentum",
     title: {
@@ -245,6 +247,8 @@ export const articles: Article[] = [
     image: "/brand/logo-circle.png",
   },
 ];
+
+export const articles: Article[] = getCmsArticles(fallbackArticles);
 
 export function isLang(value: string): value is Lang {
   return languages.includes(value as Lang);
