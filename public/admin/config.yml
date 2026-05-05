@@ -14,10 +14,6 @@ media_folder: public/uploads
 public_folder: /uploads
 
 locale: en
-slug:
-  encoding: ascii
-  clean_accents: true
-  sanitize_replacement: "-"
 
 collections:
   - name: posts
@@ -25,93 +21,20 @@ collections:
     folder: content/posts
     create: true
     extension: md
-    format: frontmatter
-    identifier_field: slug
-    sortable_fields: [publishedAt, title.en, category]
+    format: yaml-frontmatter
     fields:
-      - { label: Slug, name: slug, widget: string, hint: "Unique URL part. Example: claim-xyz" }
-      - label: Category
-        name: category
-        widget: select
-        options: ["Digital Investigation", "Fact Check", "Opinion", "Current Affairs"]
-      - label: Title
-        name: title
-        widget: object
-        fields:
-          - { label: English, name: en, widget: string }
-          - { label: Bangla, name: bn, widget: string }
-      - label: Excerpt
-        name: excerpt
-        widget: object
-        fields:
-          - { label: English, name: en, widget: text }
-          - { label: Bangla, name: bn, widget: text }
-      - label: Content Paragraphs
-        name: content
-        widget: list
-        fields:
-          - label: Paragraph
-            name: paragraph
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
-      - label: Author
-        name: author
-        widget: object
-        fields:
-          - { label: English, name: en, widget: string }
-          - { label: Bangla, name: bn, widget: string }
+      - { label: Slug, name: slug, widget: string }
+      - { label: Category, name: category, widget: select, options: ["Digital Investigation", "Fact Check", "Opinion", "Current Affairs"] }
+      - { label: Title (English), name: title_en, widget: string }
+      - { label: Title (Bangla), name: title_bn, widget: string }
+      - { label: Excerpt (English), name: excerpt_en, widget: text }
+      - { label: Excerpt (Bangla), name: excerpt_bn, widget: text }
+      - { label: Body (English), name: body_en, widget: markdown }
+      - { label: Body (Bangla), name: body_bn, widget: markdown }
+      - { label: Author (English), name: author_en, widget: string }
+      - { label: Author (Bangla), name: author_bn, widget: string }
       - { label: Publish Date, name: publishedAt, widget: datetime, date_format: "YYYY-MM-DD", time_format: false }
-      - { label: Cover Image, name: image, widget: image, required: true, choose_url: false }
-      - label: Fact-check Verdict
-        name: verdict
-        widget: select
-        required: false
-        options: ["True", "False", "Misleading"]
-      - label: Claim Origin
-        name: claimOrigin
-        widget: object
-        required: false
-        fields:
-          - { label: English, name: en, widget: text, required: false }
-          - { label: Bangla, name: bn, widget: text, required: false }
-      - label: Methodology
-        name: methodology
-        widget: list
-        required: false
-        fields:
-          - label: Item
-            name: item
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
-      - label: Evidence
-        name: evidence
-        widget: list
-        required: false
-        fields:
-          - label: Item
-            name: item
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
-      - label: Conclusion
-        name: conclusion
-        widget: object
-        required: false
-        fields:
-          - { label: English, name: en, widget: text, required: false }
-          - { label: Bangla, name: bn, widget: text, required: false }
-      - label: Sources
-        name: sources
-        widget: list
-        required: false
-        fields:
-          - { label: Label, name: label, widget: string }
-          - { label: URL, name: url, widget: string }
+      - { label: Cover Image, name: image, widget: image, required: false }
 
   - name: pages
     label: Editable Pages
@@ -120,43 +43,19 @@ collections:
         name: about
         file: content/pages/about.md
         fields:
-          - label: Title
-            name: title
-            widget: object
-            fields:
-              - { label: English, name: en, widget: string }
-              - { label: Bangla, name: bn, widget: string }
-          - label: Description
-            name: description
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
-          - label: Body
-            name: body
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
+          - { label: Title (English), name: title_en, widget: string }
+          - { label: Title (Bangla), name: title_bn, widget: string }
+          - { label: Description (English), name: description_en, widget: text }
+          - { label: Description (Bangla), name: description_bn, widget: text }
+          - { label: Body (English), name: body_en, widget: markdown }
+          - { label: Body (Bangla), name: body_bn, widget: markdown }
       - label: Contact Page
         name: contact
         file: content/pages/contact.md
         fields:
-          - label: Title
-            name: title
-            widget: object
-            fields:
-              - { label: English, name: en, widget: string }
-              - { label: Bangla, name: bn, widget: string }
-          - label: Description
-            name: description
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
-          - label: Body
-            name: body
-            widget: object
-            fields:
-              - { label: English, name: en, widget: text }
-              - { label: Bangla, name: bn, widget: text }
+          - { label: Title (English), name: title_en, widget: string }
+          - { label: Title (Bangla), name: title_bn, widget: string }
+          - { label: Description (English), name: description_en, widget: text }
+          - { label: Description (Bangla), name: description_bn, widget: text }
+          - { label: Body (English), name: body_en, widget: markdown }
+          - { label: Body (Bangla), name: body_bn, widget: markdown }
