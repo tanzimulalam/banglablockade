@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArticleCard } from "@/components/article-card";
-import { articles, categoryLabel, isLang, Lang } from "@/lib/content";
+import { categoryLabel, getArticles, isLang, Lang } from "@/lib/content";
 
 export async function generateMetadata({
   params,
@@ -26,9 +26,10 @@ export async function generateMetadata({
   };
 }
 
-export default function HomePage({ params }: { params: { lang: string } }) {
+export default async function HomePage({ params }: { params: { lang: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
   const isBangla = lang === "bn";
+  const articles = await getArticles();
   const featuredInvestigation = articles.find((article) => article.category === "Digital Investigation") ?? articles[0];
   const latestFactChecks = articles.filter((article) => article.category === "Fact Check").slice(0, 4);
   const latestReports = articles.slice(0, 6);

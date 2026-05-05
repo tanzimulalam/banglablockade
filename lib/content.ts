@@ -1,4 +1,4 @@
-import { getCmsArticles } from "@/lib/cms-content";
+import { createClient } from "@supabase/supabase-js";
 
 export const languages = ["en", "bn"] as const;
 export type Lang = (typeof languages)[number];
@@ -28,6 +28,13 @@ export type Article = {
   conclusion?: LocalizedText;
   sources?: { label: string; url: string }[];
   verdict?: Verdict;
+};
+
+export type EditablePage = {
+  slug: string;
+  title: LocalizedText;
+  description: LocalizedText;
+  body: LocalizedText;
 };
 
 export const categoryLabel: Record<Category, LocalizedText> = {
@@ -248,7 +255,146 @@ const fallbackArticles: Article[] = [
   },
 ];
 
-export const articles: Article[] = getCmsArticles(fallbackArticles);
+const fallbackPages: Record<string, EditablePage> = {
+  about: {
+    slug: "about",
+    title: { en: "About Us", bn: "আমাদের সম্পর্কে" },
+    description: {
+      en: "Bangla Blockade is an investigative media outlet focused on transparent reporting.",
+      bn: "বাংলা Blockade একটি অনুসন্ধানী সংবাদমাধ্যম, যার কাজ প্রমাণভিত্তিক প্রতিবেদন প্রকাশ।",
+    },
+    body: {
+      en: "Bangla Blockade is an investigative media outlet focused on verifying public claims with transparent evidence, sources, and context.",
+      bn: "বাংলা Blockade একটি অনুসন্ধানী সংবাদমাধ্যম। আমাদের কাজ হলো যাচাইযোগ্য দলিল, তথ্যসূত্র এবং প্রেক্ষাপটসহ জনস্বার্থের দাবি মূল্যায়ন করা।",
+    },
+  },
+  contact: {
+    slug: "contact",
+    title: { en: "Contact", bn: "যোগাযোগ" },
+    description: {
+      en: "Write to us for tips, verification requests, or partnership inquiries.",
+      bn: "টিপস, যাচাইয়ের অনুরোধ বা যেকোনো অনুসন্ধানের জন্য আমাদের লিখুন।",
+    },
+    body: {
+      en: "Use the contact form to submit tips, verification requests, partnership inquiries, and public-interest leads.",
+      bn: "যোগাযোগ ফর্ম ব্যবহার করে টিপস, যাচাইয়ের অনুরোধ, পার্টনারশিপ প্রস্তাব এবং জনস্বার্থসংশ্লিষ্ট তথ্য পাঠান।",
+    },
+  },
+};
+
+type SupabaseArticle = {
+  id: string;
+  slug: string;
+  category: Category;
+  image_url: string | null;
+  verdict: Verdict | null;
+  claim_origin_en: string | null;
+  claim_origin_bn: string | null;
+  published_at: string;
+  is_published: boolean;
+};
+
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+function emptyLocalized(): LocalizedText {
+  return { en: "", bn: "" };
+}
+
+function createLocalized(enValue?: string | null, bnValue?: string | null): LocalizedText {
+  return { en: enValue ?? "", bn: bnValue ?? "" };
+}
+
+export async function getArticles(): Promise<Article[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return fallbackArticles;
+
+  const { data: articles, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("is_published", true)
+    .order("published_at", { ascending: false });
+
+  if (error || !articles || articles.length === 0) return fallbackArticles;
+
+  const articleRows = articles as SupabaseArticle[];
+  const articleIds = articleRows.map((row) => row.id);
+
+  const [localizationsRes, paragraphsRes, methodologyRes, evidenceRes, sourcesRes] = await Promise.all([
+    supabase.from("article_localizations").select("*").in("article_id", articleIds),
+    supabase.from("article_paragraphs").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
+    supabase.from("article_methodology").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
+    supabase.from("article_evidence").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
+    supabase.from("article_sources").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
+  ]);
+
+  const localizations = localizationsRes.data ?? [];
+  const paragraphs = paragraphsRes.data ?? [];
+  const methodology = methodologyRes.data ?? [];
+  const evidence = evidenceRes.data ?? [];
+  const sources = sourcesRes.data ?? [];
+
+  return articleRows.map((row) => {
+    const locEn = localizations.find((loc) => loc.article_id === row.id && loc.lang === "en");
+    const locBn = localizations.find((loc) => loc.article_id === row.id && loc.lang === "bn");
+    const bodyEn = paragraphs.filter((item) => item.article_id === row.id && item.lang === "en");
+    const bodyBn = paragraphs.filter((item) => item.article_id === row.id && item.lang === "bn");
+    const methodologyEn = methodology.filter((item) => item.article_id === row.id && item.lang === "en");
+    const methodologyBn = methodology.filter((item) => item.article_id === row.id && item.lang === "bn");
+    const evidenceEn = evidence.filter((item) => item.article_id === row.id && item.lang === "en");
+    const evidenceBn = evidence.filter((item) => item.article_id === row.id && item.lang === "bn");
+
+    const mergedBody: LocalizedText[] =
+      Math.max(bodyEn.length, bodyBn.length) > 0
+        ? Array.from({ length: Math.max(bodyEn.length, bodyBn.length) }).map((_, index) =>
+            createLocalized(bodyEn[index]?.body, bodyBn[index]?.body)
+          )
+        : [emptyLocalized()];
+
+    const mergedMethodology: LocalizedText[] | undefined =
+      methodologyEn.length || methodologyBn.length
+        ? Array.from({ length: Math.max(methodologyEn.length, methodologyBn.length) }).map((_, index) =>
+            createLocalized(methodologyEn[index]?.item, methodologyBn[index]?.item)
+          )
+        : undefined;
+
+    const mergedEvidence: LocalizedText[] | undefined =
+      evidenceEn.length || evidenceBn.length
+        ? Array.from({ length: Math.max(evidenceEn.length, evidenceBn.length) }).map((_, index) =>
+            createLocalized(evidenceEn[index]?.item, evidenceBn[index]?.item)
+          )
+        : undefined;
+
+    return {
+      slug: row.slug,
+      category: row.category,
+      title: createLocalized(locEn?.title, locBn?.title),
+      excerpt: createLocalized(locEn?.excerpt, locBn?.excerpt),
+      content: mergedBody,
+      author: createLocalized(locEn?.author_name, locBn?.author_name),
+      publishedAt: row.published_at,
+      image: row.image_url ?? "/brand/logo-mark.png",
+      verdict: row.verdict ?? undefined,
+      claimOrigin:
+        row.claim_origin_en || row.claim_origin_bn
+          ? createLocalized(row.claim_origin_en, row.claim_origin_bn)
+          : undefined,
+      methodology: mergedMethodology,
+      evidence: mergedEvidence,
+      conclusion:
+        locEn?.conclusion || locBn?.conclusion
+          ? createLocalized(locEn?.conclusion, locBn?.conclusion)
+          : undefined,
+      sources: sources
+        .filter((item) => item.article_id === row.id)
+        .map((item) => ({ label: item.label, url: item.url })),
+    };
+  });
+}
 
 export function isLang(value: string): value is Lang {
   return languages.includes(value as Lang);
@@ -262,6 +408,38 @@ export function formatDate(dateString: string, lang: Lang): string {
   }).format(new Date(dateString));
 }
 
-export function getArticle(slug: string): Article | undefined {
+export async function getArticle(slug: string): Promise<Article | undefined> {
+  const articles = await getArticles();
   return articles.find((article) => article.slug === slug);
+}
+
+export async function getEditablePage(slug: string): Promise<EditablePage> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return fallbackPages[slug] ?? fallbackPages.about;
+
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id, slug, is_published")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (pageError || !page) return fallbackPages[slug] ?? fallbackPages.about;
+
+  const { data: pageLocs, error: locError } = await supabase
+    .from("page_localizations")
+    .select("*")
+    .eq("page_id", page.id);
+
+  if (locError || !pageLocs) return fallbackPages[slug] ?? fallbackPages.about;
+
+  const en = pageLocs.find((item) => item.lang === "en");
+  const bn = pageLocs.find((item) => item.lang === "bn");
+
+  return {
+    slug,
+    title: createLocalized(en?.title, bn?.title),
+    description: createLocalized(en?.description, bn?.description),
+    body: createLocalized(en?.body, bn?.body),
+  };
 }

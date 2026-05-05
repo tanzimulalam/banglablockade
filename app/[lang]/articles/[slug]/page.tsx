@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
-import { articles, categoryLabel, formatDate, getArticle, isLang, Lang, languages, ui } from "@/lib/content";
+import { categoryLabel, formatDate, getArticle, getArticles, isLang, Lang, languages, ui } from "@/lib/content";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const articles = await getArticles();
   return languages.flatMap((lang) => articles.map((article) => ({ lang, slug: article.slug })));
 }
 
@@ -14,7 +15,7 @@ export async function generateMetadata({
   params: { lang: string; slug: string };
 }): Promise<Metadata> {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
-  const article = getArticle(params.slug);
+  const article = await getArticle(params.slug);
 
   return {
     title: article ? article.title[lang] : "Article",
@@ -27,9 +28,9 @@ export async function generateMetadata({
   };
 }
 
-export default function ArticlePage({ params }: { params: { lang: string; slug: string } }) {
+export default async function ArticlePage({ params }: { params: { lang: string; slug: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
-  const article = getArticle(params.slug);
+  const article = await getArticle(params.slug);
   const isBangla = lang === "bn";
 
   if (!article) {

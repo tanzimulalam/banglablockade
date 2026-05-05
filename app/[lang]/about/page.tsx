@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { getEditablePage } from "@/lib/cms-content";
-import { isLang, Lang } from "@/lib/content";
+import { getEditablePage, isLang, Lang } from "@/lib/content";
 
 export async function generateMetadata({
   params,
@@ -8,17 +7,17 @@ export async function generateMetadata({
   params: { lang: string };
 }): Promise<Metadata> {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
-  const aboutPage = getEditablePage("about");
+  const aboutPage = await getEditablePage("about");
   return {
     title: aboutPage.title[lang],
     description: aboutPage.description[lang],
   };
 }
 
-export default function AboutPage({ params }: { params: { lang: string } }) {
+export default async function AboutPage({ params }: { params: { lang: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
   const isBangla = lang === "bn";
-  const aboutPage = getEditablePage("about");
+  const aboutPage = await getEditablePage("about");
 
   return (
     <section className="mx-auto w-full max-w-4xl px-4 py-10">
