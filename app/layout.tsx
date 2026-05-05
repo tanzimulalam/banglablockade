@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/bangla-blockade-logo.png",
+        url: "/brand/logo-full.png",
         width: 1200,
         height: 630,
-        alt: "Bangla Blockade logo",
+        alt: "Bangla Blockade News and Fact Check logo",
       },
     ],
   },

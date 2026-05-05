@@ -1,8 +1,10 @@
+const useProjectBasePath = process.env.GITHUB_ACTIONS && process.env.CUSTOM_DOMAIN !== "true";
+
 const nextConfig = {
   output: "export",
   trailingSlash: true,
-  basePath: process.env.GITHUB_ACTIONS ? "/banglablockade" : "",
-  assetPrefix: process.env.GITHUB_ACTIONS ? "/banglablockade/" : "",
+  basePath: useProjectBasePath ? "/banglablockade" : "",
+  assetPrefix: useProjectBasePath ? "/banglablockade/" : "",
   images: {
     unoptimized: true,
     remotePatterns: [

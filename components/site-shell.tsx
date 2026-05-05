@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Lang, ui } from "@/lib/content";
-import logo from "@/public/bangla-blockade-logo.png";
+import logo from "@/public/brand/logo-mark.png";
 
 const links = [
   { key: "home", href: "" },

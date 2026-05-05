@@ -83,8 +83,7 @@ export const articles: Article[] = [
     category: "Digital Investigation",
     author: { en: "Editorial Desk", bn: "সম্পাদকীয় ডেস্ক" },
     publishedAt: "2026-04-20",
-    image:
-      "https://images.unsplash.com/photo-1579389083078-4e7018379f7e?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-full.png",
   },
   {
     slug: "misinformation-campaign-targets-national-unity",
@@ -109,8 +108,7 @@ export const articles: Article[] = [
     category: "Fact Check",
     author: { en: "Verification Unit", bn: "যাচাই ইউনিট" },
     publishedAt: "2026-04-18",
-    image:
-      "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-mark.png",
     claimOrigin: {
       en: "Facebook posts and copied image cards shared in local groups",
       bn: "স্থানীয় গ্রুপে শেয়ার হওয়া ফেসবুক পোস্ট ও কপি করা ইমেজ কার্ড",
@@ -169,8 +167,7 @@ export const articles: Article[] = [
     category: "Opinion",
     author: { en: "Opinion Board", bn: "মতামত বোর্ড" },
     publishedAt: "2026-04-16",
-    image:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-mark.png",
   },
   {
     slug: "streets-to-digital-platforms-evolution-of-protest",
@@ -195,8 +192,7 @@ export const articles: Article[] = [
     category: "Current Affairs",
     author: { en: "Current Affairs Desk", bn: "সমসাময়িক ডেস্ক" },
     publishedAt: "2026-04-14",
-    image:
-      "https://images.unsplash.com/photo-1529101091764-c3526daf38fe?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-mark.png",
   },
   {
     slug: "voices-of-youth-stand-against-injustice",
@@ -221,8 +217,7 @@ export const articles: Article[] = [
     category: "Opinion",
     author: { en: "Community Voices", bn: "জনকণ্ঠ" },
     publishedAt: "2026-04-12",
-    image:
-      "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-mark.png",
   },
   {
     slug: "citizens-recording-truth-during-crisis",
@@ -247,8 +242,7 @@ export const articles: Article[] = [
     category: "Digital Investigation",
     author: { en: "Research Desk", bn: "গবেষণা ডেস্ক" },
     publishedAt: "2026-04-10",
-    image:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80",
+    image: "/brand/logo-circle.png",
   },
 ];
 

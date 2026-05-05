@@ -22,7 +22,7 @@ export async function generateMetadata({
     openGraph: {
       title: article ? article.title[lang] : "Bangla Blockade",
       description: article ? article.excerpt[lang] : "Bangla Blockade article",
-      images: article ? [article.image] : ["/bangla-blockade-logo.png"],
+      images: article ? [article.image] : ["/brand/logo-full.png"],
     },
   };
 }
