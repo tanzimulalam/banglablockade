@@ -1,0 +1,13 @@
+---
+description: Global editorial UX and accessibility guardrails
+alwaysApply: true
+---
+
+# Global Guardrails
+
+- Never add rotating carousels, autoplay audio/video, particle backgrounds, or parallax effects.
+- Never use neon palettes, purple-pink AI gradients, or decorative novelty fonts.
+- Ensure all interactive elements are keyboard reachable with clear visible focus styles.
+- Respect reduced-motion user preferences and avoid unnecessary animation.
+- Label editorial types clearly (fact-check, opinion, investigation, partner content, update).
+- Prioritize trust signals: source attribution, verification method visibility, and transparent timestamps.

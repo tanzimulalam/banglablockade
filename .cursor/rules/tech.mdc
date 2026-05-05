@@ -1,0 +1,13 @@
+---
+description: Bangla Blockade tech and performance constraints
+alwaysApply: true
+---
+
+# Tech Rule
+
+- Stack: Next.js App Router + TypeScript + Tailwind CSS v4.
+- Prefer server components by default; add client components only when interaction requires it.
+- Performance budget: target LCP under 2.5s, INP/FID under 100ms, CLS under 0.1, and Lighthouse performance >= 90 for key pages.
+- Optimize all media with responsive `next/image`, modern formats (WebP/AVIF), lazy loading below fold, and explicit dimensions.
+- Keep JavaScript lean: no unnecessary libraries, no heavy animation packages, and avoid render-blocking third-party scripts.
+- CMS direction: structure content so Storyblok integration can be added cleanly for multilingual workflows.

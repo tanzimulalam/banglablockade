@@ -2,13 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArticleCard } from "@/components/article-card";
-import { articles, isLang, Lang, ui } from "@/lib/content";
-
-const groupedSections = [
-  { id: "digital-investigations", category: "Digital Investigation" },
-  { id: "fact-checks", category: "Fact Check" },
-  { id: "opinions", category: "Opinion" },
-] as const;
+import { articles, categoryLabel, isLang, Lang } from "@/lib/content";
 
 export async function generateMetadata({
   params,
@@ -35,81 +29,91 @@ export async function generateMetadata({
 export default function HomePage({ params }: { params: { lang: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
   const isBangla = lang === "bn";
-  const featured = articles[0];
-  const topStories = articles.slice(1, 5);
+  const featuredInvestigation = articles.find((article) => article.category === "Digital Investigation") ?? articles[0];
+  const latestFactChecks = articles.filter((article) => article.category === "Fact Check").slice(0, 4);
+  const latestReports = articles.slice(0, 6);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
-        <div className="mb-4 inline-flex items-center rounded-md bg-[#F31B1D]/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#c81012]">
-          {lang === "bn" ? "শীর্ষ প্রতিবেদন" : "Top Story"}
-        </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <article className="overflow-hidden rounded-xl border border-slate-200">
-            <div className="relative aspect-[16/9]">
-              <Image src={featured.image} alt={featured.title[lang]} fill className="object-cover" sizes="100vw" />
-            </div>
-            <div className="p-5 md:p-6">
-              <h1 className={`text-4xl leading-tight md:text-[44px] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
-                {ui.heroTitle[lang]}
-              </h1>
-              <p className={`mt-3 text-base text-slate-700 md:text-lg ${isBangla ? "font-bn" : ""}`}>{ui.heroSubtitle[lang]}</p>
-            </div>
-          </article>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
-            <h2 className={`mb-3 text-2xl text-[#026C33] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
-              {lang === "bn" ? "সাম্প্রতিক আপডেট" : "Latest Updates"}
-            </h2>
-            <div className="space-y-4">
-              {topStories.map((story) => (
-                <article key={story.slug} className="border-b border-slate-200 pb-3 last:border-none last:pb-0">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#c81012]">{story.category}</p>
-                  <Link
-                    href={`/${lang}/articles/${story.slug}`}
-                    className={`mt-1 block text-base font-semibold leading-snug text-slate-800 hover:text-[#F31B1D] ${
-                      isBangla ? "font-bn" : ""
-                    }`}
-                  >
-                    {story.title[lang]}
-                  </Link>
-                </article>
-              ))}
-            </div>
+    <div className="mx-auto w-full content-width px-4 py-8 md:px-6">
+      <section className="grid gap-6 rounded-xl border border-[var(--color-border)] bg-white p-5 md:grid-cols-[1.2fr_0.8fr] md:p-7">
+        <div>
+          <p className={`text-sm uppercase tracking-wide text-[var(--color-secondary-green)] ${isBangla ? "font-bn" : ""}`}>
+            {isBangla ? "ধরন: অনুসন্ধানী সাংবাদিকতা" : "Investigative Media Outlet"}
+          </p>
+          <h1 className={`mt-3 text-4xl leading-tight md:text-5xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>
+            {isBangla ? "সত্য উদঘাটন, বিভ্রান্তি প্রতিরোধ" : "Uncovering the Truth, Combating Disinformation"}
+          </h1>
+          <p className={`mt-4 text-[var(--color-text-secondary)] ${isBangla ? "font-bn" : ""}`}>
+            {isBangla
+              ? "ঢাকাভিত্তিক ডিজিটাল অনুসন্ধানী সংবাদমাধ্যম; আমরা প্রমাণ, সূত্র ও পদ্ধতিকে কেন্দ্র করে যাচাইভিত্তিক প্রতিবেদন প্রকাশ করি।"
+              : "A Dhaka-based investigative digital newsroom publishing verification-first reporting with transparent sourcing and clear methodology."}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href={`/${lang}/articles/misinformation-campaign-targets-national-unity`} className="min-h-11 rounded-md bg-[var(--color-primary-green)] px-4 py-2 text-sm font-semibold text-white">
+              {isBangla ? "সর্বশেষ ফ্যাক্ট-চেক" : "Latest Fact-Checks"}
+            </Link>
+            <Link href={`/${lang}/submit-claim`} className="min-h-11 rounded-md border border-[var(--color-border)] px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)]">
+              {isBangla ? "দাবি জমা দিন" : "Submit a Claim"}
+            </Link>
           </div>
+        </div>
+        <div className="rounded-lg bg-[var(--color-bg-secondary)] p-4">
+          <h2 className={`text-lg ${isBangla ? "font-bn-heading font-semibold" : "font-en-display font-semibold"}`}>{isBangla ? "কেন আমাদের বিশ্বাস করবেন" : "Why Trust Us"}</h2>
+          <ul className={`mt-3 space-y-2 text-sm text-[var(--color-text-secondary)] ${isBangla ? "font-bn" : ""}`}>
+            <li>- {isBangla ? "প্রত্যেক যাচাইয়ে উন্মুক্ত সূত্র ও প্রমাণের তালিকা" : "Published source trails for every major claim"}</li>
+            <li>- {isBangla ? "পদ্ধতি, সীমাবদ্ধতা, আপডেট টাইমস্ট্যাম্প পরিষ্কারভাবে উল্লেখ" : "Method, limitations, and update timestamps visible"}</li>
+            <li>- {isBangla ? "বিষয়ভিত্তিক বিশেষজ্ঞ পরামর্শ ও সম্পাদকীয় রিভিউ" : "Expert consultation and editorial review workflow"}</li>
+          </ul>
         </div>
       </section>
 
       <section className="mt-12">
-        <h2 className={`mb-5 border-l-4 border-[#F31B1D] pl-3 text-3xl text-[#1a1f1b] ${isBangla ? "font-bn font-bold" : "font-en-display font-bold"}`}>
-          {lang === "bn" ? "সাম্প্রতিক প্রতিবেদন" : "Latest Reports"}
+        <h2 className={`mb-5 text-3xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>
+          {isBangla ? "সর্বশেষ ফ্যাক্ট-চেক" : "Latest Fact-Checks"}
         </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {articles.slice(0, 3).map((article) => (
-            <ArticleCard key={article.slug} article={article} lang={lang} />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {latestFactChecks.map((story) => (
+            <article key={story.slug} className="rounded-lg border border-[var(--color-border)] bg-white p-4">
+              <p className="text-xs font-semibold text-[var(--color-primary-red)]">{story.verdict ?? "Review"}</p>
+              <h3 className={`mt-2 text-base font-semibold ${isBangla ? "font-bn" : ""}`}>{story.title[lang]}</h3>
+              <p className={`mt-2 text-sm text-[var(--color-text-secondary)] ${isBangla ? "font-bn" : ""}`}>{story.excerpt[lang]}</p>
+              <Link href={`/${lang}/articles/${story.slug}`} className="mt-3 inline-block text-sm font-semibold text-[var(--color-secondary-green)]">
+                {isBangla ? "সম্পূর্ণ যাচাই" : "View full fact-check"}
+              </Link>
+            </article>
           ))}
         </div>
       </section>
 
-      {groupedSections.map((section) => (
-        <section id={section.id} key={section.id} className="mt-14">
-          <h2
-            className={`mb-5 border-l-4 border-[#F31B1D] pl-3 text-3xl text-[#1a1f1b] ${
-              isBangla ? "font-bn font-bold" : "font-en-display font-bold"
-            }`}
-          >
-            {section.category === "Digital Investigation" && (lang === "bn" ? "ডিজিটাল অনুসন্ধান" : "Digital Investigations")}
-            {section.category === "Fact Check" && (lang === "bn" ? "ফ্যাক্ট চেক" : "Fact Checks")}
-            {section.category === "Opinion" && (lang === "bn" ? "মতামত" : "Opinions")}
-          </h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {articles
-              .filter((article) => article.category === section.category)
-              .map((article) => (
-                <ArticleCard key={article.slug} article={article} lang={lang} />
-              ))}
+      <section className="mt-14 rounded-xl border border-[var(--color-border)] bg-white p-5">
+        <h2 className={`text-3xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>
+          {isBangla ? "ফিচার্ড অনুসন্ধান" : "Featured Investigation"}
+        </h2>
+        <div className="mt-4 grid gap-5 md:grid-cols-[1fr_1fr]">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+            <Image src={featuredInvestigation.image} alt={featuredInvestigation.title[lang]} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
-        </section>
-      ))}
+          <div>
+            <p className="text-sm text-[var(--color-secondary-green)]">{categoryLabel[featuredInvestigation.category][lang]}</p>
+            <h3 className={`mt-2 text-2xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>{featuredInvestigation.title[lang]}</h3>
+            <p className={`mt-3 text-[var(--color-text-secondary)] ${isBangla ? "font-bn" : ""}`}>{featuredInvestigation.excerpt[lang]}</p>
+            <Link href={`/${lang}/articles/${featuredInvestigation.slug}`} className="mt-4 inline-block rounded-md bg-[var(--color-dark-green)] px-4 py-2 text-sm font-semibold text-white">
+              {isBangla ? "রিপোর্ট পড়ুন" : "Read the report"}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <h2 className={`mb-5 text-3xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>
+          {isBangla ? "সাম্প্রতিক প্রতিবেদন" : "Latest Reports"}
+        </h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {latestReports.map((article) => (
+            <ArticleCard key={article.slug} article={article} lang={lang} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

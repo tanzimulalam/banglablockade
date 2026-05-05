@@ -1,0 +1,12 @@
+---
+description: Bangla Blockade visual design standards
+alwaysApply: true
+---
+
+# Bangla Blockade Design Rule
+
+- Use the brand palette only: green family (`#17954A`, `#0E6149`, `#073225`) and red family (`#E42737`, `#A51E2B`, `#5B0E19`) with warm neutral backgrounds (`#FDFBF7`, `#F0EEEA`).
+- Avoid neon tones, glowing effects, bright blue accents, and decorative gradients.
+- Typography: Bengali headings use Noto Sans Bengali; Bengali body uses Noto Serif Bengali; English headings use Antonio; body uses Inter.
+- Use a 4px spacing scale (`4, 8, 12, 16, 20, 24, 32, 40, 48, 64`) and generous whitespace.
+- Keep motion subtle: no parallax, no autoplay, no carousels; hover scale maximum is `1.02`; always honor `prefers-reduced-motion`.

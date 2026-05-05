@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Noticia_Text, Tiro_Bangla } from "next/font/google";
+import { Antonio, Inter, Noto_Sans_Bengali, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 
-const noticiaText = Noticia_Text({
-  variable: "--font-noticia-text",
-  weight: ["400", "700"],
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const tiroBangla = Tiro_Bangla({
-  variable: "--font-tiro-bangla",
-  weight: ["400"],
+const antonio = Antonio({
+  variable: "--font-antonio",
+  subsets: ["latin"],
+});
+
+const notoSansBengali = Noto_Sans_Bengali({
+  variable: "--font-noto-sans-bengali",
+  subsets: ["bengali", "latin"],
+});
+
+const notoSerifBengali = Noto_Serif_Bengali({
+  variable: "--font-noto-serif-bengali",
   subsets: ["bengali", "latin"],
 });
 
@@ -45,7 +53,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${noticiaText.variable} ${tiroBangla.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${antonio.variable} ${notoSansBengali.variable} ${notoSerifBengali.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

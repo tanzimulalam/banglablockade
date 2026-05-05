@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { articles, categoryLabel, formatDate, getArticle, isLang, Lang, languages, ui } from "@/lib/content";
 
 export function generateStaticParams() {
@@ -40,9 +41,32 @@ export default function ArticlePage({ params }: { params: { lang: string; slug: 
   }
 
   const shareUrl = `https://banglablockade.com/${lang}/articles/${article.slug}`;
+  const isFactCheck = article.category === "Fact Check";
+  const claimReview = isFactCheck
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ClaimReview",
+        url: shareUrl,
+        claimReviewed: article.title[lang],
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: article.verdict === "True" ? "1" : "0",
+          bestRating: "1",
+          worstRating: "0",
+          alternateName: article.verdict ?? "Reviewed",
+        },
+        itemReviewed: {
+          "@type": "Claim",
+          author: { "@type": "Organization", name: "Bangla Blockade" },
+        },
+        author: { "@type": "Organization", name: "Bangla Blockade" },
+        datePublished: article.publishedAt,
+      }
+    : null;
 
   return (
     <article className="mx-auto w-full max-w-4xl px-4 py-8">
+      {claimReview && <Script id={`claim-review-${article.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(claimReview) }} />}
       <header className="mb-6 border-b border-slate-200 pb-6">
         <span className="rounded-full bg-[#026C33]/10 px-3 py-1 text-sm font-bold text-[#026C33]">
           {categoryLabel[article.category][lang]}
@@ -72,6 +96,39 @@ export default function ArticlePage({ params }: { params: { lang: string; slug: 
           <p key={index}>{paragraph[lang]}</p>
         ))}
       </div>
+
+      {isFactCheck && (
+        <section className={`mt-8 space-y-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-5 ${isBangla ? "font-bn" : ""}`}>
+          <h2 className={`text-2xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>{isBangla ? "ফ্যাক্ট-চেক সারাংশ" : "Fact-Check Summary"}</h2>
+          <p><strong>{isBangla ? "রায়:" : "Verdict:"}</strong> {article.verdict ?? (isBangla ? "পর্যালোচিত" : "Reviewed")}</p>
+          <p><strong>{isBangla ? "দাবির উৎস:" : "Claim origin:"}</strong> {article.claimOrigin?.[lang]}</p>
+          <div>
+            <strong>{isBangla ? "পদ্ধতি:" : "Methodology:"}</strong>
+            <ul className="mt-2 list-disc pl-5">
+              {article.methodology?.map((item, index) => <li key={index}>{item[lang]}</li>)}
+            </ul>
+          </div>
+          <div>
+            <strong>{isBangla ? "প্রমাণ:" : "Evidence:"}</strong>
+            <ul className="mt-2 list-disc pl-5">
+              {article.evidence?.map((item, index) => <li key={index}>{item[lang]}</li>)}
+            </ul>
+          </div>
+          <p><strong>{isBangla ? "উপসংহার:" : "Conclusion:"}</strong> {article.conclusion?.[lang]}</p>
+          <div>
+            <strong>{isBangla ? "সূত্র:" : "Sources:"}</strong>
+            <ul className="mt-2 space-y-1">
+              {article.sources?.map((source) => (
+                <li key={source.url}>
+                  <Link href={source.url} className="text-[var(--color-secondary-green)] underline" target="_blank" rel="noreferrer">
+                    {source.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <div className="mt-10 border-t border-slate-200 pt-6">
         <p className={`mb-4 text-sm font-semibold text-slate-700 ${isBangla ? "font-bn" : ""}`}>{ui.share[lang]}</p>
