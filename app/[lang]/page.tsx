@@ -30,6 +30,22 @@ export default async function HomePage({ params }: { params: { lang: string } })
   const lang: Lang = isLang(params.lang) ? params.lang : "en";
   const isBangla = lang === "bn";
   const articles = await getArticles();
+  if (articles.length === 0) {
+    return (
+      <div className="mx-auto w-full content-width px-4 py-16 md:px-6">
+        <section className="rounded-xl border border-[var(--color-border)] bg-white p-8 text-center">
+          <h1 className={`text-3xl ${isBangla ? "font-bn-heading font-bold" : "font-en-display font-bold"}`}>
+            {isBangla ? "কনটেন্ট পাওয়া যায়নি" : "No content available"}
+          </h1>
+          <p className={`mt-3 text-[var(--color-text-secondary)] ${isBangla ? "font-bn" : ""}`}>
+            {isBangla
+              ? "ডাটাবেজে প্রকাশিত কনটেন্ট পাওয়া যায়নি। অনুগ্রহ করে Supabase ডেটা যাচাই করুন।"
+              : "No published records were found in the database. Please verify Supabase data."}
+          </p>
+        </section>
+      </div>
+    );
+  }
   const featuredInvestigation = articles.find((article) => article.category === "Digital Investigation") ?? articles[0];
   const latestFactChecks = articles.filter((article) => article.category === "Fact Check").slice(0, 4);
   const latestReports = articles.slice(0, 6);

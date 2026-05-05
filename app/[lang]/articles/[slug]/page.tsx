@@ -2,11 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
-import { categoryLabel, formatDate, getArticle, getArticles, isLang, Lang, languages, ui } from "@/lib/content";
+import { categoryLabel, formatDate, getArticle, getArticles, isLang, Lang, ui } from "@/lib/content";
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const articles = await getArticles();
-  return languages.flatMap((lang) => articles.map((article) => ({ lang, slug: article.slug })));
+  try {
+    const articles = await getArticles();
+    if (articles.length === 0) {
+      // Static export requires at least one param path for dynamic routes.
+      return [{ slug: "placeholder" }];
+    }
+    return articles.map((article) => ({ slug: article.slug }));
+  } catch (error) {
+    console.error("generateStaticParams failed for article slugs", error);
+    return [{ slug: "placeholder" }];
+  }
 }
 
 export async function generateMetadata({
