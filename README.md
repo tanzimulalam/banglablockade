@@ -1,88 +1,84 @@
 # বাংলা Blockade
 
-A fully responsive, bilingual (English + Bengali) digital journalism platform for **truth, justice, and national identity**.
+An independent, bilingual (English & Bengali) digital investigative media platform dedicated to **truth, justice, and national identity**.
 
-This project is built as a modern editorial website inspired by contemporary fact-check and investigative layouts, with a strong Bangladesh-first brand identity.
+Bangla Blockade serves as the organized voice against misinformation and injustice. The platform focuses on verification-first reporting, digital investigations, and transparent fact-checking with clear methodology and open evidence.
 
-## Core Features
+## 🚀 Key Features
 
-- **Bilingual UX** with localized routes: `/en` and `/bn`
-- **Responsive editorial design** for mobile, tablet, and desktop
-- **Sticky header + persistent navigation**
-- **Grid-based homepage** with categorized article cards
-- **Dedicated article pages** with metadata, featured image, and sharing links
-- **About, Contact, Privacy, Terms** pages
-- **SEO-ready metadata** (title, description, Open Graph)
-- **Optimized media flow** using Next.js `Image` component
+* **Bilingual Experience:** Seamlessly switch between English (`/en`) and Bengali (`/bn`) with fully localized content and UI.
+* **Fact-Checking Engine:** Dedicated fact-check reports with clear verdicts (True, False, Misleading), evidence analysis, methodology transparency, and claim origin tracking.
+* **Modern Editorial Design:** A premium, responsive layout inspired by contemporary investigative journalism platforms. Features a grid-based homepage, categorized article cards, and a sticky navigation header.
+* **Dynamic Content Management:** Fully integrated with **Supabase** for real-time article fetching, database management, and structured content delivery.
+* **SEO & Performance Optimized:** Built on Next.js App Router for optimal performance, SSR, and built-in SEO metadata (Title, Description, Open Graph).
+* **Responsive & Accessible:** Designed to work flawlessly across mobile, tablet, and desktop devices.
 
-## Tech Stack
+## 💻 Tech Stack
 
-- **Next.js 14** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **ESLint**
+* **Framework:** Next.js 14+ (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS + Custom CSS Variables
+* **Database & Backend:** Supabase (PostgreSQL)
+* **Linting & Formatting:** ESLint
 
-## Brand System
+## 🎨 Brand Identity
 
-- **Primary Red:** `#F31B1D` (sacrifice and unity)
-- **Primary Green:** `#026C33` (nation and identity)
-- **Typography:**
-  - Latin body/UI: Roboto
-  - Bengali body/UI: Shadhinata/Kalpurush/Abusayed fallback stack
-  - Latin display headlines: Impact
+* **Primary Red:** `#F31B1D` (representing sacrifice and unity)
+* **Primary Green:** `#026C33` (representing nation and identity)
+* **Typography:**
+  * Latin text: *Roboto* & *Impact* (for display)
+  * Bengali text: *Shadhinata*, *Kalpurush*, or system fallback
 
-## Routes
+## 🗺️ Application Routes
 
-- `/` -> redirects to `/en`
-- `/en`, `/bn` -> Homepage
-- `/en/articles/[slug]`, `/bn/articles/[slug]` -> Article pages
-- `/en/about`, `/bn/about`
-- `/en/contact`, `/bn/contact`
-- `/en/privacy`, `/bn/privacy`
-- `/en/terms`, `/bn/terms`
+* `/` -> Auto-redirects to `/en`
+* `/[lang]` -> Homepage featuring latest investigations and fact-checks
+* `/[lang]/fact-checks` -> Dedicated hub for all fact-checking reports
+* `/[lang]/investigations` -> Deep-dive investigative journalism
+* `/[lang]/articles/[slug]` -> Individual article reading experience
+* `/[lang]/about` -> Platform mission and information
+* `/[lang]/contact` -> Contact details and secure tips channel
 
-## Local Development
+## 🛠️ Local Development Setup
 
+### 1. Clone and Install
 ```bash
+git clone https://github.com/tanzimulalam/banglablockade.git
+cd banglablockade
 npm install
-npm run dev
 ```
 
-Then open `http://localhost:3000`.
+### 2. Environment Variables
+Create a `.env` file in the root directory and add your Supabase credentials. **(Never commit this file!)**
 
-## Production Build
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+```
+
+### 3. Run the Development Server
+```bash
+npm run dev
+```
+Open `http://localhost:3000` to view the application.
+
+## 📦 Production Build
 
 ```bash
 npm run build
 npm run start
 ```
 
-## Project Structure
+## 🗄️ Supabase Schema Overview
 
-```text
-app/
-  [lang]/
-    articles/[slug]/
-    about/
-    contact/
-    privacy/
-    terms/
-components/
-lib/
-public/
-```
+The platform uses a unified `articles_content` table to serve both English and Bengali content dynamically. Key fields include localized titles, excerpts, full markdown/paragraph bodies, and specialized fact-checking metadata (verdict, claim origin, methodology, evidence). 
 
-## Content & Localization
+*(Refer to `docs/supabase-seed.sql` or the provided schema definitions for exact table structures).*
 
-Sample editorial data, categories, and UI translation strings are maintained in:
+## 📬 Contact & Tips
 
-- `lib/content.ts`
-
-## Contact
-
-- `info@banglablockade.com`
-- `tips@banglablockade.com`
+* **General Inquiries:** `info@banglablockade.com`
+* **Secure Tips:** `tips@banglablockade.com`
 
 ---
-
-**বাংলা Blockade** is designed to amplify the organized voice of students and people standing against injustice, discrimination, and oppression.
+*Fundamental change begins from the people's hands.*

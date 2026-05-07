@@ -52,7 +52,6 @@ export const ui = {
     opinions: { en: "Opinions", bn: "মতামত" },
     about: { en: "About", bn: "পরিচিতি" },
     contact: { en: "Contact", bn: "যোগাযোগ" },
-    submitClaim: { en: "Submit Claim", bn: "দাবি জমা" },
   },
   heroTitle: {
     en: "Fundamental change begins from the people's hands",
@@ -65,19 +64,34 @@ export const ui = {
   readNow: { en: "Read Now", bn: "এখন পড়ুন" },
   share: { en: "Share this story", bn: "সংবাদটি শেয়ার করুন" },
   contactHeading: { en: "Send us a tip or inquiry", bn: "তথ্য বা প্রশ্ন পাঠান" },
-  submitClaim: { en: "Submit a Claim", bn: "দাবি জমা দিন" },
 };
 
 type SupabaseArticle = {
-  id: string;
+  id: number;
   slug: string;
-  category: Category;
+  category: string | null;
   image_url: string | null;
-  verdict: Verdict | null;
-  claim_origin_en: string | null;
-  claim_origin_bn: string | null;
-  published_at: string;
-  is_published: boolean;
+  en_title: string | null;
+  bn_title: string | null;
+  en_excerpt: string | null;
+  bn_excerpt: string | null;
+  en_article: string | null;
+  bn_article: string | null;
+  en_author: string | null;
+  bn_author: string | null;
+  en_claim_origin: string | null;
+  bn_claim_origin: string | null;
+  en_methodology: string | null;
+  bn_methodology: string | null;
+  en_evidence: string | null;
+  bn_evidence: string | null;
+  en_conclusion: string | null;
+  bn_conclusion: string | null;
+  en_sources: string | null;
+  bn_sources: string | null;
+  verdict: string | null;
+  published_at: string | null;
+  is_published: boolean | null;
 };
 
 function getSupabaseClient() {
@@ -92,7 +106,78 @@ function emptyLocalized(): LocalizedText {
 }
 
 function createLocalized(enValue?: string | null, bnValue?: string | null): LocalizedText {
-  return { en: enValue ?? "", bn: bnValue ?? "" };
+  // EN fallback for BN if BN is missing
+  return { en: enValue ?? "", bn: bnValue ?? enValue ?? "" };
+}
+
+function splitTextList(enValue?: string | null, bnValue?: string | null): LocalizedText[] | undefined {
+  const enList = (enValue ?? "")
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const bnList = (bnValue ?? "")
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const length = Math.max(enList.length, bnList.length);
+  if (length === 0) return undefined;
+  return Array.from({ length }).map((_, index) => createLocalized(enList[index], bnList[index]));
+}
+
+function parseSources(enValue?: string | null, bnValue?: string | null): { label: string; url: string }[] | undefined {
+  const raw = enValue || bnValue;
+  if (!raw) return undefined;
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((item): item is { label?: unknown; url?: unknown } => typeof item === "object" && item !== null)
+        .map((item) => ({
+          label: typeof item.label === "string" ? item.label : "Source",
+          url: typeof item.url === "string" ? item.url : "#",
+        }));
+    }
+  } catch {
+    // Fallback format: one URL per line
+    const urls = raw
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (urls.length > 0) {
+      return urls.map((url, index) => ({ label: `Source ${index + 1}`, url }));
+    }
+  }
+  return undefined;
+}
+
+function normalizeCategory(value?: string | null): Category {
+  const valid: Category[] = ["Digital Investigation", "Fact Check", "Opinion", "Current Affairs"];
+  if (value && (valid as string[]).includes(value)) {
+    return value as Category;
+  }
+  return "Current Affairs";
+}
+
+function normalizeVerdict(value?: string | null): Verdict | undefined {
+  if (value === "True" || value === "False" || value === "Misleading") return value;
+  return undefined;
+}
+
+function bodyToParagraphs(enBody?: string | null, bnBody?: string | null): LocalizedText[] {
+  const enParagraphs = (enBody ?? "")
+    .split(/\n\s*\n/g)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const bnParagraphs = (bnBody ?? "")
+    .split(/\n\s*\n/g)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const length = Math.max(enParagraphs.length, bnParagraphs.length, 1);
+  return Array.from({ length }).map((_, index) =>
+    createLocalized(enParagraphs[index] ?? "", bnParagraphs[index] ?? "")
+  );
 }
 
 export async function getArticles(): Promise<Article[]> {
@@ -100,87 +185,42 @@ export async function getArticles(): Promise<Article[]> {
     const supabase = getSupabaseClient();
     if (!supabase) return [];
 
-    const { data: articles, error } = await supabase
-      .from("articles")
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Supabase fetch timed out")), 8000)
+    );
+
+    const query = supabase
+      .from("articles_content")
       .select("*")
       .eq("is_published", true)
       .order("published_at", { ascending: false });
 
+    const { data: articles, error } = await Promise.race([query, timeout]) as Awaited<typeof query>;
+
     if (error || !articles || articles.length === 0) return [];
-
     const articleRows = articles as SupabaseArticle[];
-    const articleIds = articleRows.map((row) => row.id);
-
-    const [localizationsRes, paragraphsRes, methodologyRes, evidenceRes, sourcesRes] = await Promise.all([
-      supabase.from("article_localizations").select("*").in("article_id", articleIds),
-      supabase.from("article_paragraphs").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
-      supabase.from("article_methodology").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
-      supabase.from("article_evidence").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
-      supabase.from("article_sources").select("*").in("article_id", articleIds).order("sort_order", { ascending: true }),
-    ]);
-
-    const localizations = localizationsRes.data ?? [];
-    const paragraphs = paragraphsRes.data ?? [];
-    const methodology = methodologyRes.data ?? [];
-    const evidence = evidenceRes.data ?? [];
-    const sources = sourcesRes.data ?? [];
-
-    return articleRows.map((row) => {
-    const locEn = localizations.find((loc) => loc.article_id === row.id && loc.lang === "en");
-    const locBn = localizations.find((loc) => loc.article_id === row.id && loc.lang === "bn");
-    const bodyEn = paragraphs.filter((item) => item.article_id === row.id && item.lang === "en");
-    const bodyBn = paragraphs.filter((item) => item.article_id === row.id && item.lang === "bn");
-    const methodologyEn = methodology.filter((item) => item.article_id === row.id && item.lang === "en");
-    const methodologyBn = methodology.filter((item) => item.article_id === row.id && item.lang === "bn");
-    const evidenceEn = evidence.filter((item) => item.article_id === row.id && item.lang === "en");
-    const evidenceBn = evidence.filter((item) => item.article_id === row.id && item.lang === "bn");
-
-    const mergedBody: LocalizedText[] =
-      Math.max(bodyEn.length, bodyBn.length) > 0
-        ? Array.from({ length: Math.max(bodyEn.length, bodyBn.length) }).map((_, index) =>
-            createLocalized(bodyEn[index]?.body, bodyBn[index]?.body)
-          )
-        : [emptyLocalized()];
-
-    const mergedMethodology: LocalizedText[] | undefined =
-      methodologyEn.length || methodologyBn.length
-        ? Array.from({ length: Math.max(methodologyEn.length, methodologyBn.length) }).map((_, index) =>
-            createLocalized(methodologyEn[index]?.item, methodologyBn[index]?.item)
-          )
-        : undefined;
-
-    const mergedEvidence: LocalizedText[] | undefined =
-      evidenceEn.length || evidenceBn.length
-        ? Array.from({ length: Math.max(evidenceEn.length, evidenceBn.length) }).map((_, index) =>
-            createLocalized(evidenceEn[index]?.item, evidenceBn[index]?.item)
-          )
-        : undefined;
-
-    return {
+    return articleRows.map((row) => ({
       slug: row.slug,
-      category: row.category,
-      title: createLocalized(locEn?.title, locBn?.title),
-      excerpt: createLocalized(locEn?.excerpt, locBn?.excerpt),
-      content: mergedBody,
-      author: createLocalized(locEn?.author_name, locBn?.author_name),
-      publishedAt: row.published_at,
-      image: row.image_url ?? "/brand/logo-mark.png",
-      verdict: row.verdict ?? undefined,
+      category: normalizeCategory(row.category),
+      title: createLocalized(row.en_title, row.bn_title),
+      excerpt: createLocalized(row.en_excerpt, row.bn_excerpt),
+      content: bodyToParagraphs(row.en_article, row.bn_article),
+      author: createLocalized(row.en_author, row.bn_author),
+      publishedAt: row.published_at ?? new Date().toISOString().slice(0, 10),
+      image: row.image_url?.trim() ? row.image_url : "/brand/logo-mark.png",
+      verdict: normalizeVerdict(row.verdict),
       claimOrigin:
-        row.claim_origin_en || row.claim_origin_bn
-          ? createLocalized(row.claim_origin_en, row.claim_origin_bn)
+        row.en_claim_origin || row.bn_claim_origin
+          ? createLocalized(row.en_claim_origin, row.bn_claim_origin)
           : undefined,
-      methodology: mergedMethodology,
-      evidence: mergedEvidence,
+      methodology: splitTextList(row.en_methodology, row.bn_methodology),
+      evidence: splitTextList(row.en_evidence, row.bn_evidence),
       conclusion:
-        locEn?.conclusion || locBn?.conclusion
-          ? createLocalized(locEn?.conclusion, locBn?.conclusion)
+        row.en_conclusion || row.bn_conclusion
+          ? createLocalized(row.en_conclusion, row.bn_conclusion)
           : undefined,
-      sources: sources
-        .filter((item) => item.article_id === row.id)
-        .map((item) => ({ label: item.label, url: item.url })),
-    };
-    });
+      sources: parseSources(row.en_sources, row.bn_sources),
+    }));
   } catch (error) {
     console.error("Supabase getArticles failed", error);
     return [];
@@ -208,33 +248,22 @@ export async function getEditablePage(slug: string): Promise<EditablePage> {
   const supabase = getSupabaseClient();
   if (!supabase) return { slug, title: emptyLocalized(), description: emptyLocalized(), body: emptyLocalized() };
 
-  const { data: page, error: pageError } = await supabase
-    .from("pages")
-    .select("id, slug, is_published")
+  const { data: pageRow, error: pageError } = await supabase
+    .from("articles_content")
+    .select("*")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
 
-  if (pageError || !page) {
+  if (pageError || !pageRow) {
     return { slug, title: emptyLocalized(), description: emptyLocalized(), body: emptyLocalized() };
   }
 
-  const { data: pageLocs, error: locError } = await supabase
-    .from("page_localizations")
-    .select("*")
-    .eq("page_id", page.id);
-
-  if (locError || !pageLocs) {
-    return { slug, title: emptyLocalized(), description: emptyLocalized(), body: emptyLocalized() };
-  }
-
-  const en = pageLocs.find((item) => item.lang === "en");
-  const bn = pageLocs.find((item) => item.lang === "bn");
-
+  const row = pageRow as SupabaseArticle;
   return {
     slug,
-    title: createLocalized(en?.title, bn?.title),
-    description: createLocalized(en?.description, bn?.description),
-    body: createLocalized(en?.body, bn?.body),
+    title: createLocalized(row.en_title, row.bn_title),
+    description: createLocalized(row.en_excerpt, row.bn_excerpt),
+    body: createLocalized(row.en_article, row.bn_article),
   };
 }

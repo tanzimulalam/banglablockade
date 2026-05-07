@@ -66,11 +66,8 @@ export default async function HomePage({ params }: { params: { lang: string } })
               : "A Dhaka-based investigative digital newsroom publishing verification-first reporting with transparent sourcing and clear methodology."}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/${lang}/articles/misinformation-campaign-targets-national-unity`} className="min-h-11 rounded-md bg-[var(--color-primary-green)] px-4 py-2 text-sm font-semibold text-white">
+            <Link href={`/${lang}/fact-checks`} className="min-h-11 rounded-md bg-[var(--color-primary-green)] px-4 py-2 text-sm font-semibold text-white">
               {isBangla ? "সর্বশেষ ফ্যাক্ট-চেক" : "Latest Fact-Checks"}
-            </Link>
-            <Link href={`/${lang}/submit-claim`} className="min-h-11 rounded-md border border-[var(--color-border)] px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)]">
-              {isBangla ? "দাবি জমা দিন" : "Submit a Claim"}
             </Link>
           </div>
         </div>

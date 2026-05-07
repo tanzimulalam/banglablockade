@@ -5,11 +5,10 @@ import logo from "@/public/brand/logo-mark.png";
 
 const links = [
   { key: "home", href: "" },
-  { key: "factChecks", href: "articles/misinformation-campaign-targets-national-unity" },
+  { key: "factChecks", href: "fact-checks" },
   { key: "investigations", href: "investigations" },
   { key: "about", href: "about" },
   { key: "contact", href: "contact" },
-  { key: "submitClaim", href: "submit-claim" },
 ] as const;
 
 export function SiteShell({
@@ -47,7 +46,7 @@ export function SiteShell({
                 href={`/${lang}/${link.href}`}
                 className={`text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-secondary-green)] ${isBangla ? "font-bn" : ""}`}
               >
-                {link.key === "submitClaim" ? ui.submitClaim[lang] : ui.nav[link.key][lang]}
+                {ui.nav[link.key][lang]}
               </Link>
             ))}
           </nav>
@@ -83,7 +82,7 @@ export function SiteShell({
                 lang === "bn" ? "font-bn" : ""
               }`}
             >
-              {link.key === "submitClaim" ? ui.submitClaim[lang] : ui.nav[link.key][lang]}
+              {ui.nav[link.key][lang]}
             </Link>
           ))}
         </nav>
